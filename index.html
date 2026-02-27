@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InteriorAI Pro - AI-Powered Interior Design</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #081a3a;          /* DARK BLUE */
+            --secondary: #0f2c5c;
+            --accent: #d4af37;           /* GOLD */
+            --gold-soft: #f4e2a1;
+            --bg-light: #0b2147;
+            --text-dark: #ffffff;
+            --border: rgba(212,175,55,0.3);
+            --success: #00d084;
+            --gradient-gold: linear-gradient(135deg,#d4af37,#f7e7a1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg,#081a3a,#020c1f);
+            color: white;
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(42, 42, 42, 0.95) 0%, rgba(26, 26, 26, 0.98) 100%);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ff6b35;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .panel {
+            background: #0f2c5c;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow:
+                0 0 0 1px rgba(212,175,55,0.3),
+                0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"] {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    background: #081a3a;
+    color: white;
+    border: 2px solid rgba(212,175,55,0.35);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow:
+        0 0 12px rgba(212,175,55,0.8),
+        inset 0 0 6px rgba(212,175,55,0.3);
+}
+
+        .style-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 0.8rem;
+        }
+
+        .style-option {
+    padding: 1rem;
+    border: 2px solid rgba(212,175,55,0.35);
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 600;
+    background: #081a3a;           /* DARK BLUE */
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.style-option.active {
+    background: linear-gradient(180deg, #0f2c5c, #081a3a);
+    color: #f7e7a1;
+    border: 2px solid var(--accent);
+    box-shadow:
+        0 0 15px rgba(212,175,55,0.8),
+        inset 0 0 10px rgba(212,175,55,0.25);
+}
+        .style-option.active {
+            background: var(--gradient-2);
+            color: white;
+            border: none;
+        }
+
+        .dropzone {
+            border: 3px dashed var(--accent);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .dropzone-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        #imageInput {
+            display: none;
+        }
+
+        .preview-container {
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .preview-container.show {
+            display: block;
+        }
+
+        #imagePreview {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: var(--gradient-gold);
+            color: #081a3a;
+            font-weight: 800;
+            border: none;
+            box-shadow: 0 0 15px rgba(212,175,55,0.6);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(212,175,55,0.9);
+        }
+
+        .output-panel {
+            display: none;
+        }
+
+        .output-panel.show {
+            display: block;
+        }
+
+        .output-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: #888;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        #generatedImage {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        .concept-box {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .layout-item {
+            padding: 1rem;
+            background: rgba(0, 208, 132, 0.05);
+            border-left: 4px solid var(--success);
+            margin-bottom: 0.8rem;
+            border-radius: 6px;
+        }
+
+        .layout-item::before {
+            content: '✓ ';
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .shopping-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .shopping-card {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .shopping-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .item-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .store-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .store-link {
+            display: block;
+            padding: 0.7rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .store-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .comparison-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            display: none;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-section.show {
+            display: block;
+        }
+
+        .comparison-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 2rem auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .comparison-slider {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            cursor: ew-resize;
+        }
+
+        .comparison-slider img {
+            width: 200%;
+            height: 100%;
+            .comparison-slider img {
+            object-fit: contain;
+            }
+            transform: translateX(-50%);
+        }
+
+        .comparison-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: white;
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .before-label, .after-label {
+            position: absolute;
+            top: 20px;
+            font-weight: 700;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            z-index: 5;
+        }
+
+        .before-label {
+            left: 20px;
+        }
+
+        .after-label {
+            right: 20px;
+        }
+
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .loading-spinner.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 107, 53, 0.1);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        .loading-text {
+            text-align: center;
+            margin-top: 1rem;
+            color: white;
+            font-weight: 600;
+        }
+        select, input[type="text"] {
+            background: #081a3a;
+            color: white;
+            border: 2px solid rgba(212,175,55,0.4);
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(212,175,55,0.6);
+        }
+        .landing {
+    padding: 80px 5%;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+}
+
+.landing-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 1400px;
+    margin: auto;
+}
+
+.about-section h1 {
+    font-size: 3rem;
+    color: var(--accent);
+    margin-bottom: 20px;
+}
+
+.about-section p {
+    line-height: 1.8;
+    margin-bottom: 20px;
+    color: #ddd;
+}
+
+.about-section ul li {
+    margin: 10px 0;
+    font-weight: 600;
+}
+
+.landing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.landing-grid img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid rgba(212,175,55,0.3);
+    transition: 0.4s;
+}
+
+.landing-grid img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(212,175,55,0.7);
+}
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">🏠</div>
+                InteriorAI Pro
+            </div>
+        </div>
+    </header>
+    <!-- ================= LANDING SECTION ================= -->
+<section class="landing">
+    <div class="landing-wrapper">
+
+        <!-- LEFT ABOUT -->
+        <div class="about-section">
+            <h1>Design Your Dream Space with AI</h1>
+
+            <p>
+                InteriorAI Pro transforms your room using advanced AI-powered
+                interior design. Upload your space and instantly visualize
+                modern, luxury, or traditional interiors with layout planning,
+                shopping suggestions, and immersive VR experience.
+            </p>
+
+            <ul>
+                <li>✨ AI Room Transformation</li>
+                <li>📐 Smart Layout Suggestions</li>
+                <li>🛍️ Furniture Recommendations</li>
+                <li>🥽 VR Room Experience</li>
+            </ul>
+        </div>
+
+        <!-- RIGHT IMAGE GRID -->
+        <div class="landing-grid">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c">
+            <img src="https://images.unsplash.com/photo-1618220179428-22790b461013">
+            <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace">
+            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c">
+        </div>
+
+    </div>
+</section>
+
+    <div class="container">
+        <div class="main-wrapper">
+            <!-- UPLOAD PANEL -->
+            <div class="panel">
+                <h2 class="section-title">Upload Your Room</h2>
+                
+                <div class="form-group">
+                    <label>Design Style</label>
+                    <div class="style-grid">
+                        <div class="style-option active" data-style="Modern">Modern</div>
+                        <div class="style-option" data-style="Minimal">Minimal</div>
+                        <div class="style-option" data-style="Luxury">Luxury</div>
+                        <div class="style-option" data-style="Indian Traditional">Indian</div>
+                        <div class="style-option" data-style="Scandinavian">Scandinavian</div>
+                        <div class="style-option" data-style="Bohemian">Bohemian</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Room Type</label>
+                    <select id="roomType">
+                        <option>Living Room</option>
+                        <option>Bedroom</option>
+                        <option>Kitchen</option>
+                        <option>Office</option>
+                        <option>Dining Room</option>
+                        <option>Bathroom</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Purpose</label>
+                    <input type="text" id="purpose" placeholder="e.g., Relaxation, Work">
+                </div>
+
+                <div class="form-group">
+                    <label>Vibe</label>
+                    <select id="vibe">
+                        <option>Cozy</option>
+                        <option>Sophisticated</option>
+                        <option>Energetic</option>
+                        <option>Peaceful</option>
+                        <option>Minimalist</option>
+                        <option>Vibrant</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Image</label>
+                    <div class="dropzone" id="dropzone">
+                        <div class="dropzone-icon">📸</div>
+                        <div style="font-weight: 600;">Drop your image here</div>
+                        <div style="font-size: 0.9rem; color: #888; margin-top: 0.5rem;">or click to select</div>
+                    </div>
+                    <input type="file" id="imageInput" accept="image/*">
+                    <div class="preview-container" id="previewContainer">
+                        <img id="imagePreview" alt="Preview">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="generateBtn" onclick="generateDesign()">
+                    ✨ Generate Design
+                </button>
+            </div>
+
+            <!-- OUTPUT PANEL -->
+            <div class="panel output-panel" id="outputPanel">
+                <h2 class="section-title">Your Design Result</h2>
+                
+                <div class="output-tabs">
+                    <button class="tab-btn active" onclick="switchTab('design')">🎨 Design</button>
+                    <button class="tab-btn" onclick="switchTab('layout')">📐 Layout</button>
+                    <button class="tab-btn" onclick="switchTab('shopping')">🛍️ Shopping</button>
+                </div>
+
+                <div id="design" class="tab-content active">
+                    <img id="generatedImage" alt="Generated Design">
+                    <button class="btn btn-primary"
+                        style="margin-top:15px;background:#111"
+                        onclick="openVR()">
+                        🥽 View in VR
+                    </button>
+                    <div class="concept-box" id="conceptBox"></div>
+                </div>
+
+                <div id="layout" class="tab-content">
+                    <div id="layoutList"></div>
+                </div>
+
+                <div id="shopping" class="tab-content">
+                    <div class="shopping-grid" id="shoppingGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPARISON SECTION -->
+        <div class="comparison-section" id="comparisonSection">
+            <h2 class="section-title">Before & After Comparison</h2>
+            <div class="comparison-container">
+                <img id="beforeImage" alt="Before" style="width: 100%; height: auto;">
+                <div class="comparison-slider" id="comparisonSlider">
+                    <img id="afterImage" alt="After">
+                </div>
+                <div class="comparison-handle"></div>
+                <div class="before-label">BEFORE</div>
+                <div class="after-label">AFTER</div>
+            </div>
+            <p style="text-align: center; color: #666; margin-top: 1rem;">💡 Drag the slider to compare</p>
+        </div>
+    </div>
+
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+        <div class="loading-text">Creating Your Design...</div>
+    </div>
+
+    <script>
+        const BACKEND_URL = "https://ffb7-34-182-54-122.ngrok-free.app";
+        let selectedStyle = "Modern";
+        let currentImageBase64 = null;
+        let generatedImageBase64 = null;
+        let vrImageBase64 = null;
+
+        // Style selection
+        document.querySelectorAll('.style-option').forEach(el => {
+            el.addEventListener('click', function() {
+                document.querySelectorAll('.style-option').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                selectedStyle = this.dataset.style;
+            });
+        });
+
+        // Image upload
+        const dropzone = document.getElementById('dropzone');
+        const imageInput = document.getElementById('imageInput');
+
+        dropzone.addEventListener('click', () => imageInput.click());
+        dropzone.addEventListener('dragover', (e) => e.preventDefault());
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (e.dataTransfer.files.length) handleImageSelect(e.dataTransfer.files[0]);
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleImageSelect(e.target.files[0]);
+        });
+
+        function handleImageSelect(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImageBase64 = e.target.result;
+                document.getElementById('imagePreview').src = currentImageBase64;
+                document.getElementById('previewContainer').classList.add('show');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Generate design
+        async function generateDesign() {
+            if (!currentImageBase64) {
+                alert('Please upload an image first');
+                return;
+            }
+
+            const generateBtn = document.getElementById('generateBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            generateBtn.disabled = true;
+            loadingSpinner.classList.add('show');
+
+            try {
+                const base64Data = currentImageBase64.includes(',') 
+                    ? currentImageBase64.split(',')[1] 
+                    : currentImageBase64;
+
+                const response = await fetch(`${BACKEND_URL}/generate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        image: base64Data,
+                        style: selectedStyle,
+                        room_type: document.getElementById('roomType').value,
+                        purpose: document.getElementById('purpose').value,
+                        vibe: document.getElementById('vibe').value
+                    })
+                });
+
+                if (!response.ok) throw new Error(`Error ${response.status}`);
+
+                const data = await response.json();
+                generatedImageBase64 = `data:image/png;base64,${data.image}`;
+                vrImageBase64 = data.image;
+                
+                // Display results
+                document.getElementById('generatedImage').src = generatedImageBase64;
+                document.getElementById('conceptBox').textContent = data.concept;
+                
+                document.getElementById('layoutList').innerHTML = data.layout
+                    .map(item => `<div class="layout-item">${item}</div>`).join('');
+                
+                document.getElementById('shoppingGrid').innerHTML = data.shopping
+                    .map(shop => `
+                        <div class="shopping-card">
+                            <div class="item-name">${shop.item}</div>
+                            <div class="store-links">
+                                ${Object.entries(shop.stores)
+                                    .map(([store, url]) => `<a href="${url}" target="_blank" class="store-link">${store} →</a>`)
+                                    .join('')}
+                            </div>
+                        </div>
+                    `).join('');
+
+                document.getElementById('outputPanel').classList.add('show');
+                document.getElementById('comparisonSection').classList.add('show');
+                
+                // Initialize comparison
+                setTimeout(() => {
+                    initializeComparison();
+                    document.getElementById('outputPanel').scrollIntoView({ behavior: 'smooth' });
+                }, 300);
+
+            } catch (error) {
+                console.error(error);
+                alert('Error: ' + error.message);
+            } finally {
+                generateBtn.disabled = false;
+                loadingSpinner.classList.remove('show');
+            }
+        }
+        // ===============================
+// VR VIEWER
+// ===============================
+            async function openVR() {
+
+            if (!generatedImageBase64) {
+                alert("Generate a design first!");
+                return;
+            }
+
+            try {
+
+                const cleanBase64 = vrImageBase64.includes(',')
+                    ? vrImageBase64.split(',')[1]
+                    : vrImageBase64;
+
+                const response = await fetch(`${BACKEND_URL}/generate_vr`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        image: cleanBase64,
+                        style: selectedStyle,
+                        room_type: document.getElementById('roomType').value,
+                        purpose: document.getElementById('purpose').value,
+                        vibe: document.getElementById('vibe').value
+                    })
+                });
+
+                const data = await response.json();
+                console.log("VR RESPONSE:", data);
+
+                if(!data.vr_image){
+                    alert("VR generation failed");
+                    return;
+                }
+
+                const vrImage = encodeURIComponent(data.vr_image);
+
+                window.open(`vr.html?img=${vrImage}`, "_blank");
+
+            } catch (err) {
+                console.error(err);
+                alert("VR loading failed");
+            }
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Comparison slider
+        function initializeComparison() {
+            const before = document.getElementById('beforeImage');
+            const after = document.getElementById('afterImage');
+            const slider = document.getElementById('comparisonSlider');
+            const handle = document.querySelector('.comparison-handle');
+
+            before.src = currentImageBase64;
+            after.src = generatedImageBase64;
+
+            function updateSlider(e) {
+                const rect = before.getBoundingClientRect();
+                const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+                slider.style.left = x + '%';
+                handle.style.left = x + '%';
+            }
+            window.addEventListener("scroll", () => {
+                document.querySelector(".landing").style.opacity =
+                    1 - window.scrollY / 700;
+            });
+
+            slider.addEventListener('mousemove', updateSlider);
+            document.addEventListener('mouseup', () => {
+                slider.removeEventListener('mousemove', updateSlider);
+            });
+            slider.addEventListener('mousedown', () => {
+                document.addEventListener('mousemove', updateSlider);
+            });
+        }
+    </script>
+</body>
+</html>
